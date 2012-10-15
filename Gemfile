@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '3.2.8'
 gem 'pg'
 gem 'bootstrap-sass', '2.0.4'
+gem 'bcrypt-ruby', '3.0.1'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -18,6 +19,13 @@ end
 #is execjs needed for production?
 #for development?
 #gem "execjs"
+
+
+#annotates models: do bundle install and then bundle exec annotate , to implement
+#run annotate again any time the data model changes.)
+#tut. listing 6.5
+gem 'annotate', '2.5.0', group: :development
+
 
 # Gems used only for assets and not required
 # in production environments by default.
