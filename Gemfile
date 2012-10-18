@@ -13,7 +13,7 @@ group :development, :test do
 	gem 'wdm', '~> 0.0.3'
 	gem 'guard-rspec', '1.2.1'
 	gem 'guard-spork', '1.2.0'
-    gem 'spork', '0.9.2'
+  gem 'spork', '0.9.2'
 end
 
 #is execjs needed for production?
@@ -26,6 +26,7 @@ end
 #tut. listing 6.5
 gem 'annotate', '2.5.0', group: :development
 
+gem 'factory_girl_rails', '4.1.0', group: :test
 
 # Gems used only for assets and not required
 # in production environments by default.
