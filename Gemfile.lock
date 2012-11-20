@@ -113,6 +113,7 @@ GEM
       activesupport (= 3.2.8)
       bundler (~> 1.0)
       railties (= 3.2.8)
+    rails-simple-search (0.9.3)
     railties (3.2.8)
       actionpack (= 3.2.8)
       activesupport (= 3.2.8)
@@ -189,6 +190,7 @@ DEPENDENCIES
   jquery-rails (= 2.0.2)
   pg
   rails (= 3.2.8)
+  rails-simple-search
   rb-fchange (= 0.0.5)
   rb-notifu (= 0.0.4)
   rspec-rails (= 2.11.0)

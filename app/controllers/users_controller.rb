@@ -7,10 +7,18 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    @microposts = @user.microposts.paginate(page: params[:page])
-  #  @item = User.new
+    #@microposts = @user.microposts.paginate(page: params[:page])
+    #  @item = User.new
+
+    params[:search] = {"name" => ""} unless params[:search]
+    #Rails.logger.info("+++++ params is #{params}")
+    @search = Search.new(:micropost, params[:search])
+    @search.add_conditions("user_id" => @user.id)
+    #Rails.logger.info("====== condtions is #{@search.conditions}")
+
+    @microposts = Micropost.paginate(page: params[:page], :conditions => @search.conditions, :joins => @search.joins)
   end
-	
+
   def new
   	@user = User.new
   end

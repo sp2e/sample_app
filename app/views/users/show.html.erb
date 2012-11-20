@@ -37,6 +37,18 @@
       the above line would have used @users since
       we are in a veiw corresponding 
       to the user controller. %>
+
+      <%# search gme code %>
+
+       <%= form_for @search, :url => "/users/#{@user.id}", :method => :get do |f| %>
+
+      <%= f.label "user_name" %>
+      <%= f.text_field 'user.name' %>
+
+      <%= f.label :content %>
+      <%= f.text_field 'content' %>
+      <%= f.submit "search" %>
+      <% end %>
     <% end %>
   </div>
 
