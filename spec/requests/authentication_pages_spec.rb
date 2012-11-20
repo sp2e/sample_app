@@ -79,6 +79,20 @@ describe "Authentication" do
             page.should have_selector('title', text: 'Edit user')
           end
         end
+
+        describe "signout , then signin again" do
+          before do
+            delete signout_path
+            visit signin_path
+            fill_in "Email",    with: user.email
+            fill_in "Password", with: user.password
+            click_button "Sign in"
+          end
+          it "should render profile (default) page" do
+            page.should have_selector('title', text: user.name)
+          end
+        end
+
       end #when attempting to visit a protected page
 
       describe "in the Users controller" do
@@ -101,6 +115,19 @@ describe "Authentication" do
         end
         
       end #in the Users controller
+
+      describe "in the Microposts controller" do
+
+        describe "submitting to the create action" do
+          before { post microposts_path }
+          specify { response.should redirect_to(signin_path) }
+        end
+
+        describe "submitting to the destroy action" do
+          before { delete micropost_path(FactoryGirl.create(:micropost)) }
+          specify { response.should redirect_to(signin_path) }
+        end
+      end #describe "in the Microposts controller" 
     end #for non-signed-in users
 
     describe "as wrong user" do
@@ -131,8 +158,53 @@ describe "Authentication" do
       end
     end #describe "as non-admin user"
 
+    describe "as signed-in user" do
+      let(:user) { FactoryGirl.create(:user) }
+      let(:user2) { FactoryGirl.create(:user) }
 
-  end #describe "authorization"
-    
+      before { sign_in user }
+
+      describe "submitting a create request to the Users controller" do
+        before { post users_path(user2) }
+        specify { response.should redirect_to(root_path) }        
+      end
+    end #describe "as signed-in user"
+
+=begin
+#the folloing already tested in user_pages_spec.rb
+    describe "as admin user" do
+      let(:user) { FactoryGirl.create(:user) }
+      let(:admin) { FactoryGirl.create(:admin) }
+      before do
+        #user sign_in is necessary: not sure why.
+        sign_in user
+        sign_in admin
+        visit users_path
+        #click_link "delete",admin
+        #click_link "You sure?"
+      end
+      it { should have_selector('h1',    text: 'All users') }
+      it {should have_link('delete')}
+      it { should have_link('delete', href: user_path(User.first)) }     
+      it {should have_link(admin.name, href: user_path(admin))} 
+
+      it "Admin should not be able to delete itself" do
+          expect { delete user_path(admin) }.to change(User, :count).by(0)
+      end
+      describe "admin can delete other user" do
+        it "admin should not be able to delete itself" do
+          #NOTE delete link only appears for user,
+          #not for admin users.
+          expect {  click_link('delete')}.to change(User, :count).by(-1)
+        end
+
+        #it "should not flash destroy message" do
+          # page.should_not have_content("User destroyed")
+        #end
+
+      end #describe "admin trying to delete self"    
+    end #describe "as admin user"  
+=end
+     
+  end #describe "authorization"   
 end
-

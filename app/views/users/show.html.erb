@@ -8,5 +8,37 @@
       </h1>
     </section>
   </aside>
+
+  <div class="span8">
+    <% if @user.microposts.any? %>
+      <h3>Microposts (<%= @user.microposts.count %>)</h3>
+      <ol class="microposts">
+        <%= render partial: 'shared/view_microposts', collection: @microposts, as: :item,  locals:  {feedpath: false}  %>
+
+        <%#= render partial: 'shared/view_microposts', collection: @microposts, as: :item, object: false %>
+
+
+        <%# "partial" above is required since you have additional specifications %>
+
+        <%#= render partial: @microposts, as: :item %>
+       
+        <%#the above code is short-hand for  %>
+        <%#1) calling the partial _micropost %>
+        <%#2) iterating threw every micropost in this view :
+        it is equivilant to below%>
+
+        <%#= render  partial: 'microposts/micropost',collection: @microposts, as: :item%>
+        <%#= Note: the file name is singular,
+         the collection value is plural, at least by the example in rails_guids %>
+        
+      </ol>
+      <%= will_paginate @microposts %>
+      <%# without designating "@microposts", 
+      the above line would have used @users since
+      we are in a veiw corresponding 
+      to the user controller. %>
+    <% end %>
+  </div>
+
 </div>
 

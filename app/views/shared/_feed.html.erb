@@ -1,0 +1,17 @@
+<%# called from views/shared/signed_in.html.erb %>
+
+<% if @feed_items.any? %>
+  <ol class="microposts">
+  <%#= render partial: 'shared/feed_item', collection: @feed_items, as: :item %>
+
+  <%#= render'shared/view_microposts', item: @feed_items.first, object: true%>
+
+  <%# cannot get the object cases to work %>
+
+  <%#= render partial: 'shared/view_microposts', collection: @feed_items, as: :item, object: true %>
+
+  <%= render partial: 'shared/view_microposts', collection: @feed_items, as: :item, locals:  {feedpath: true} %>
+  
+  </ol>
+  <%= will_paginate @feed_items %>
+<% end %>

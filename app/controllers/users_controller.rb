@@ -3,11 +3,13 @@ class UsersController < ApplicationController
   before_filter :signed_in_user, only: [:index,:edit, :update, :destroy]
   before_filter :correct_user,   only: [:edit, :update]
   before_filter :admin_user,     only: :destroy
+  before_filter :signed_in_user_to_root_path,   only: [:new, :create]
 
   def show
     @user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page: params[:page])
+  #  @item = User.new
   end
-
 	
   def new
   	@user = User.new
@@ -49,7 +51,16 @@ class UsersController < ApplicationController
       # Handle a successful update.
       flash[:success] = "Profile updated"
       sign_in @user
-      redirect_to @user     
+      redirect_to @user    
+      #Note that we sign in the user 
+      #as part of a successful profile update; 
+      #this is because the remember token gets reset 
+      #when the user is saved (Listing 8.18), 
+      #which invalidates the user’s session (Listing 8.22).
+      # This is a nice security feature, 
+      #as it means that any hijacked sessions 
+      #will automatically expire 
+      #when the user information is changed. 
     else
       render 'edit'
     end
@@ -63,22 +74,21 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    User.find(params[:id]).destroy
+    # puts "destory entered"
+    usad = (User.find(params[:id]))
+    if !current_user?(usad)
+    usad.destroy
     flash[:success] = "User destroyed."
+    end
     redirect_to users_url
   end
 
   private 
   #no "end" statement for private, so private must always live at end of file.
 
-    def signed_in_user
-      unless signed_in?
-        store_location
-
-        #notice: ...  is equivalent to,  flash[:notice] = "Please sign in."
-        redirect_to signin_url, notice: "Please sign in."
-      end
-    end
+    #moved to SessionsHelper
+    #def signed_in_user
+    #end
 
     def correct_user
       @user = User.find(params[:id])
@@ -89,4 +99,9 @@ class UsersController < ApplicationController
       redirect_to(root_path) unless current_user.admin?
     end
 
+    def signed_in_user_to_root_path
+      if signed_in?
+        redirect_to root_path
+      end
+    end
 end

@@ -37,6 +37,15 @@ without focusing on less important details.
     user == current_user
   end
 
+  def signed_in_user
+    unless signed_in?
+      store_location
+
+      #notice: ...  is equivalent to,  flash[:notice] = "Please sign in."
+      redirect_to signin_url, notice: "Please sign in."
+    end
+  end
+
   def sign_out
     self.current_user = nil
     cookies.delete(:remember_token)

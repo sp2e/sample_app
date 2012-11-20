@@ -1,0 +1,4 @@
+	<%#= render 'delete_micropost', mp: @feed_items) %>
+    <%= link_to "delete", mp, method: :delete,
+                                     data: { confirm: "You sure?" },
+                                     title: mp.content %>

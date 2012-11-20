@@ -30,11 +30,11 @@ describe "User pages" do
         expect { click_button submit }.not_to change(User, :count)
       end
 
-        describe "after submission" do
-          before { click_button submit }
+      describe "after submission" do
+        before { click_button submit }
 
-          it { should have_selector('title', text: 'Sign up') }
-          it { should have_content('error') }
+        it { should have_selector('title', text: 'Sign up') }
+        it { should have_content('error') }
       end
 
     end
@@ -44,7 +44,7 @@ describe "User pages" do
         fill_in "Name",         with: "Example User"
         fill_in "Email",        with: "user@example.com"
         fill_in "Password",     with: "foobar"
-        fill_in "Confirmation", with: "foobar"
+        fill_in "Confirm Password", with: "foobar"
       end
 
       it "should create a user" do
@@ -107,7 +107,8 @@ describe "User pages" do
       it { should have_selector('title', text: new_name) }
       it { should have_selector('div.alert.alert-success') }
       it { should have_link('Sign out', href: signout_path) }
-      specify { user.reload.name.should  == new_name }
+      #This reloads the user variable from the test database 
+      #using user.reload, and then verifies that the user’s new name and email match the new values.specify { user.reload.name.should  == new_name }
       specify { user.reload.email.should == new_email }
     end
 
@@ -149,16 +150,39 @@ describe "User pages" do
           sign_in admin
           visit users_path
         end
-
+        #NOTE that user was signed in previously
+        #and this evidently is necessary 
+        # do not know why.
         it { should have_link('delete', href: user_path(User.first)) }
         it "should be able to delete another user" do
           expect { click_link('delete') }.to change(User, :count).by(-1)
         end
         it { should_not have_link('delete', href: user_path(admin)) }
+        it "Admin should not be able to delete itself" do
+          expect { delete user_path(admin) }.to change(User, :count).by(0)
+        end
       end
     end #describe "delete links"
-
   end #describe "index" 
+
+  describe "profile page" do
+    let(:user) { FactoryGirl.create(:user) }
+    let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "Foo") }
+    let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "Bar") }
+
+    before { visit user_path(user) }
+
+    it { should have_selector('h1',    text: user.name) }
+    it { should have_selector('title', text: user.name) }
+
+    describe "microposts" do
+      it { should have_content(m1.content) }
+      it { should have_content(m2.content) }
+      it { should have_content(user.microposts.count) }
+    end
+  end
+
+
 
 end #User pages
 

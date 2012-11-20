@@ -1,0 +1,21 @@
+  <% if feedpath %>
+   <%# if view_microposts %>
+    <li id="<%= item.id %>">
+    <%= link_to gravatar_for(item.user), item.user %>
+    <span class="user">
+    <%= link_to item.user.name, item.user %>
+    </span>
+  <% else  %> 
+    <li>
+  <% end  %>
+  <span class="content"><%= wrap(item.content) %></span>
+  <span class="timestamp">
+    Posted <%= time_ago_in_words(item.created_at) %> ago.
+  </span>
+  <% if current_user?(item.user) %>
+    <%= render 'shared/delete_micropost', mp:item %>
+    <%#= link_to "delete", micropost, method: :delete,
+                                     data: { confirm: "You sure?" },
+                                     title: micropost.content %>
+  <% end %> 
+  </li> 

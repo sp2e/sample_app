@@ -12,6 +12,7 @@
 class User < ActiveRecord::Base
   attr_accessible :name, :email, :password, :password_confirmation
   has_secure_password
+  has_many :microposts, dependent: :destroy
 
   #before_save { |user| user.email = email.downcase }
   #following is equivalent, easier to read
@@ -26,6 +27,28 @@ class User < ActiveRecord::Base
                     uniqueness: { case_sensitive: false }
   validates :password, length: { minimum: 6 }
   validates :password_confirmation, presence: true
+
+  def feed
+    # This is preliminary. See "Following users" for the full implementation.
+    Micropost.where("user_id = ?", id)
+    #equivalent to simply, 
+    #microposts
+    #We’ve used the code in Listing 10.39 instead 
+    #because it generalizes much more naturally to the
+    # full status feed needed in Chapter 11.
+  end
+=begin   NOTE about ABOVE:
+The question mark in
+
+Micropost.where("user_id = ?", id)
+
+ensures that id is properly escaped before being 
+included in the underlying SQL query, thereby avoiding
+a serious security hole called SQL injection. The id
+attribute here is just an integer, so there is no   danger in this case, but always escaping variables
+injected into SQL statements is a good habit to 
+cultivate.
+=end
 
   private
 
