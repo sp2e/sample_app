@@ -3,8 +3,11 @@ require 'spec_helper'
 describe "Micropost pages" do
 
   subject { page }
+  User.delete_all 
+#above line may or may not be helping make test more robust
 
   let(:user) { FactoryGirl.create(:user) }
+  #     raise user.inspect
   before { sign_in user }
 
   describe "micropost creation" do
@@ -31,9 +34,12 @@ describe "Micropost pages" do
 
     describe "pagination" do
 
-      before(:all) { 30.times { FactoryGirl.create(:micropost, user: user) } }
+      before(:all) { 31.times { FactoryGirl.create(:micropost, user: user) } }
+      #raise user.inspect
       #before(:all) { FactoryGirl.create(:micropost, user: user) }
       after(:all)  { Micropost.delete_all }
+
+      #after(:all)  { User.delete_all }
 
       it { should have_selector('div.pagination') }
 

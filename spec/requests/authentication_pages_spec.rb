@@ -114,6 +114,15 @@ describe "Authentication" do
           it { should have_selector('title', text: 'Sign in') }
         end
         
+        describe "visiting the following page" do
+          before { visit following_user_path(user) }
+          it { should have_selector('title', text: 'Sign in') }
+        end
+
+        describe "visiting the followers page" do
+          before { visit followers_user_path(user) }
+          it { should have_selector('title', text: 'Sign in') }
+        end
       end #in the Users controller
 
       describe "in the Microposts controller" do
@@ -128,6 +137,26 @@ describe "Authentication" do
           specify { response.should redirect_to(signin_path) }
         end
       end #describe "in the Microposts controller" 
+
+      describe "in the Relationships controller" do
+        describe "submitting to the create action" do
+          before { post relationships_path }
+          specify { response.should redirect_to(signin_path) }
+        end
+
+        describe "submitting to the destroy action" do
+          before { delete relationship_path(1) }
+          specify { response.should redirect_to(signin_path) }          
+        end
+=begin
+Note that, in order to avoid the overhead of creating a virtually useless Relationship object, the delete test hard-codes the id 1 in the named route:
+
+before { delete relationship_path(1) }
+
+This works because the user should be redirected before the application ever tries to retrieve the relationship with this id.
+=end
+
+      end #describe "in the Relationships controller" 
     end #for non-signed-in users
 
     describe "as wrong user" do
