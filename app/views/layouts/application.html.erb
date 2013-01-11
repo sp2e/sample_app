@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<%#Rails 3 uses HTML5 by default (as indicated by the doctype <!DOCTYPE html>);  
+%>
 <html>
   <head>
     <title><%= full_title(yield(:title)) %></title>
@@ -13,10 +15,20 @@
   <body>
     <%= render 'layouts/header' %>
     <div class="container">
+      <%#  
+      Before submitting a valid registration in a browser, we’re going to add a bit of polish common in web applications: a message that appears on the subsequent page (in this case, welcoming our new user to the application) and then disappears upon visiting a second page or on page reload. The Rails way to accomplish this is to use a special variable called the flash, which operates like flash memory in that it stores its data temporarily. 
+      %>
       <% flash.each do |key, value| %>
 
         <%# note use of div as a symbol below,  :div    %>  
         <%= content_tag(:div, value, class: "alert alert-#{key}") %>
+        <%# 
+        NOTE the use of content_tag above, which
+        replaces the line below to make things easier to read....from  Listing 7.33.  
+
+        NOTE inserted space between % and > combos below to extend this comment
+         <div class="alert alert-<%= key % >"><%= value % ></div>
+        end comment ....  %>
 
       <% end %>
 

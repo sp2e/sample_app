@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.8'
+#orig was rails v 3.2.8
+gem 'rails', '3.2.11'
 gem 'pg'
 gem 'bootstrap-sass', '2.0.4'
 gem 'bcrypt-ruby', '3.0.1'
@@ -22,8 +23,10 @@ group :development, :test do
   gem 'spork', '0.9.2'
 end
 
-#is execjs needed for production?
-#for development?
+#my conclusion: execjs not neded, 
+#bootstrap-sass doesnt need it, as sample_app doesnt
+# rubyracer file notes dont indicate a need either
+
 #gem "execjs"
 
 
